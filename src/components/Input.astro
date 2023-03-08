@@ -6,6 +6,19 @@ const props = Astro.props;
 const id = "input-" + getId();
 ---
 
+<style>
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+</style>
 <div>
   <label for={id} class="block text-sm font-semibold leading-6 text-gray-900">
     {props.name}{props.required ? "*" : ""}
@@ -13,7 +26,8 @@ const id = "input-" + getId();
   <div class="mt-1">
     <input
       required={props.required}
-      type="text"
+      type={props.type ?? "text"}
+      step={props.type === "number" ? "any" : undefined}
       name={props.name}
       id={id}
       value={props.value}

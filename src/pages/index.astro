@@ -3,9 +3,16 @@ import Input from "../components/Input.astro";
 import Select from "../components/Select.astro";
 import CopyIcon from "../components/CopyIcon.astro";
 import { transformProps } from "@unpic/core";
+import { resetId } from "../getId";
+
+resetId();
 const searchParams = Astro.url.searchParams;
 
 let params = Object.fromEntries(searchParams as any);
+
+Object.keys(params).forEach(function (key, index) {
+  params[key] = params[key] === "" ? undefined : params[key];
+});
 
 let transformedProps;
 let error;
@@ -47,7 +54,7 @@ const Element = "textarea";
         <h1 class="pt-8 text-center text-5xl uppercase md:text-left">
           unpic-img
         </h1>
-        <h2 class="pt-2 text-2xl">
+        <h2 class="pt-2 text-xl">
           Generate responsive, high-performance images using image CDNs
         </h2>
       </header>
@@ -55,9 +62,13 @@ const Element = "textarea";
         <form action="/" method="get">
           <div class="grid grid-cols-1 gap-y-6 gap-x-8 sm:grid-cols-2">
             <Input name="src" required={true} value={params.src} />
-            <Input name="height" value={params.height} />
-            <Input name="width" value={params.width} />
-            <Input name="aspectRatio" value={params.aspectRatio} />
+            <Input name="height" type="number" value={params.height} />
+            <Input name="width" type="number" value={params.width} />
+            <Input
+              name="aspectRatio"
+              type="number"
+              value={params.aspectRatio}
+            />
             <Select value={params.layout} />
             <Input name="class" value={params.class} />
           </div>
@@ -70,18 +81,18 @@ const Element = "textarea";
             </button>
           </div>
         </form>
-        <div class="my-14">
+        <div class="my-8">
           {
             transformedProps ? (
               <>
-                <h2 class="mb-6 text-3xl">Preview</h2>
+                <h2 class="mb-6 text-xl">Preview</h2>
                 <div id="img-container">
-                  <img {...transformedProps} />
+                  <img alt="Optimized image" {...transformedProps} />
                 </div>
               </>
             ) : (
               <div>
-                <h2 class="mb-6 text-3xl">Error transforming props:</h2>
+                <h2 class="mb-6 text-xl">Error transforming props:</h2>
                 <pre>{error}</pre>
               </div>
             )
@@ -90,7 +101,7 @@ const Element = "textarea";
         {
           transformedProps ? (
             <div>
-              <h2 class="mb-6 text-3xl">
+              <h2 class="mb-6 text-xl">
                 Code
                 <button
                   id="copy-code-button"
@@ -100,7 +111,11 @@ const Element = "textarea";
                   <span class="sr-only">copy to clipboard</span>
                 </button>
               </h2>
-              <Element disabled class="h-[30rem] w-full">
+              <Element
+                disabled
+                class="h-[30rem] w-full"
+                aria-label="Optimized image as text"
+              >
                 <img {...transformedProps} />
               </Element>
             </div>
