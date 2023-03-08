@@ -19,7 +19,7 @@ const id = "input-" + getId();
     -moz-appearance: textfield;
   }
 </style>
-<div>
+<div class={props.class}>
   <label for={id} class="block text-sm font-semibold leading-6 text-gray-900">
     {props.name}{props.required ? "*" : ""}
   </label>
